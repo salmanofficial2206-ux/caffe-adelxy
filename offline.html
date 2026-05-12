@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Coffe Adel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
+        }
+        .offline-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #008080;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .menu-preview {
+            text-align: left;
+            margin-top: 30px;
+        }
+        .menu-preview h2 {
+            color: #008080;
+            font-size: 1.2em;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .retry-btn {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .retry-btn:hover {
+            background-color: #006666;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <h1>Ups! Kamu lagi offline</h1>
+        <p>Tapi tenang, kamu tetap bisa lihat menu favoritmu di sini. Silakan cek koneksi internetmu dan coba lagi nanti ya!</p>
+        
+        <div class="menu-preview">
+            <h2>Menu Populer Kami</h2>
+            <div class="menu-item">
+                <span>Thai Tea Original</span>
+                <span>Rp 20.000</span>
+            </div>
+            <div class="menu-item">
+                <span>Es Cincau Hijau</span>
+                <span>Rp 18.000</span>
+            </div>
+            <div class="menu-item">
+                <span>Cappuccino</span>
+                <span>Rp 25.000</span>
+            </div>
+            <div class="menu-item">
+                <span>Matcha Latte</span>
+                <span>Rp 22.000</span>
+            </div>
+        </div>
+        
+        <button class="retry-btn" onclick="window.location.reload()">Coba Lagi</button>
+    </div>
+</body>
+</html>

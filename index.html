@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Minuman Segar - Hanya ada di Coffe Adel</title>
+    <meta name="description" content="Aneka minuman segar dan kopi premium dari Coffe Adel. Pesan sekarang dan nikmati pengiriman cepat!">
+    <meta name="theme-color" content="#008080">
+
+    <!-- PWA Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Coffe Adel">
+    <link rel="apple-touch-icon" href="image/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="image/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="image/icon-512.png">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-filter"></div>
+            <div class="skeleton-promo">
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+            </div>
+            <div class="skeleton-menu">
+                <div class="skeleton-product"></div>
+                <div class="skeleton-product"></div>
+                <div class="skeleton-product"></div>
+                <div class="skeleton-product"></div>
+            </div>
+        </div>
+    </div>
+
+    <header id="home">
+        <nav class="main-nav">
+            <a href="#home">Home</a>
+            <a href="#menu">Menu</a>
+            <a href="#sejarah">Sejarah</a>
+            <a href="#kontak">Kontak</a>
+            <button id="dark-mode-toggle" class="dark-mode-btn" onclick="toggleDarkMode()">🌙</button>
+        </nav>
+        <h1>ANEKA COFFE ADEL</h1>
+        <p id="welcome-message" class="welcome-message"></p>
+        <p>Aneka Minuman Segar Pelepas Dahaga</p>
+        <p class="jam-buka">Buka setiap hari: 08.00 - 22.00</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- SECTION PENCARIAN & FILTER -->
+        <section class="filter-pencarian">
+            <div class="search-box">
+                <input type="text" id="input-cari" placeholder="Cari minuman favoritmu..." oninput="filterMenu(); showSearchSuggestions()" onkeyup="showSearchSuggestions()" onfocus="showSearchSuggestions()">
+                <button id="voice-search-btn" class="voice-search-btn" onclick="startVoiceSearch()" title="Pencarian Suara">
+                    🎤
+                </button>
+                <div id="search-suggestions" class="search-suggestions" style="display: none;"></div>
+            <div class="filter-box">
+                <label for="filter-harga">Kat Harga:</label>
+                <select id="filter-harga" onchange="filterMenu()">
+                    <option value="semua">Semua Harga</option>
+                    <option value="murah">Di bawah Rp 20.000</option>
+                    <option value="sedang">Rp 20.000 - Rp 30.000</option>
+                    <option value="mahal">Di atas Rp 30.000</option>
+                </select>
+
+                <label for="urutkan-harga" style="margin-left: 10px;">Urutkan:</label>
+                <select id="urutkan-harga" onchange="urutkanProduk()">
+                    <option value="default">Pilih Urutan</option>
+                    <option value="termurah">Termurah</option>
+                    <option value="termahal">Termahal</option>
+                </select>
+            </div>
+            <div class="mini-cart-box">
+                <button class="mini-cart-btn" onclick="toggleMiniCart()">
+                    🛒 Keranjang
+                    <span id="mini-cart-count" class="mini-cart-badge">0</span>
+                </button>
+                <div id="mini-cart-panel" class="mini-cart-panel" style="display: none;">
+                    <h3>Keranjang Belanja</h3>
+                    <div id="mini-cart-items" class="mini-cart-items">
+                        <p style="text-align: center; color: #999;">Keranjang kosong</p>
+                    </div>
+                    <div class="mini-cart-total">
+                        <strong>Total: <span id="mini-cart-total">Rp 0</span></strong>
+                    </div>
+                    <button class="mini-cart-checkout" onclick="goToCheckout()">Checkout →</button>
+                </div>
+            </div>
+            <!-- Floating cart button for mobile -->
+            <button class="mini-cart-btn-mobile" onclick="toggleMiniCart()">
+                🛒 <span id="mini-cart-count-mobile" class="mini-cart-badge">0</span>
+            </button>
+        </section>
+        <section class="promo-section">
+            <h2>Promo Minggu Ini</h2>
+            <div class="promo-grid">
+                <div class="promo-item">
+                    <img src="image/thai.jpg" alt="Thai Tea Original">
+                    <div class="promo-info">
+                        <span class="badge promo">Promo</span>
+                        <h3>Thai Tea Original</h3>
+                        <p>Teh Thailand manis, diskon 20% minggu ini. Pesan sebelum habis!</p>
+                        <p class="harga harga-baru">Rp 20.000</p>
+                    </div>
+                </div>
+                <div class="promo-item">
+                    <img src="image/cincau.jpg" alt="Es Cincau Hijau">
+                    <div class="promo-info">
+                        <span class="badge promo">Promo</span>
+                        <h3>Es Cincau Hijau</h3>
+                        <p>Cincau segar dengan santan, nikmat dan hemat. Promo spesial hanya hari ini.</p>
+                        <p class="harga harga-baru">Rp 18.000</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="katalog" id="menu">
+            <h2>Daftar Menu Minuman</h2>
+            <p class="katalog-desc">Di Aneka Coffe Adel, kami percaya bahwa setiap gelas minuman bukan sekadar pelepas dahaga, melainkan sebuah bentuk apresiasi untuk diri sendiri setelah menjalani hari yang padat. Dari aroma biji kopi yang baru dipanggang hingga kesegaran buah asli, kami menghadirkan simfoni rasa yang diracik khusus untuk lidah Anda.</p>
+            <div class="produk" data-nama="Iced Coffee Latte" data-harga="25000" data-bahan="Kopi Arabika, Susu Segar, Es Batu, Gula" data-ukuran="500ml" data-kalori="180" data-protein="5g" data-gula="15g" data-kafein="75mg">
+                <span class="badge best-seller">Best Seller</span>
+                <img src="image/copi.jpg" alt="Iced Coffee Latte">
+                <h3>Iced Coffee Latte</h3>
+                <p class="deskripsi">Perpaduan kopi espresso premium dan susu segar, disajikan dingin.</p>
+                <p class="harga">Rp 25.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">🛒 Keranjang</button>
+                    <button class="beli-langsung" onclick="beliLangsung(this)">⚡ Beli</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                    <button class="share-btn" onclick="shareProduct(this)">📤 Share</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Thai Tea Original" data-harga="20000" data-bahan="Teh Hitam Thailand, Krim, Gula Merah, Es Batu" data-ukuran="500ml" data-kalori="220" data-protein="4g" data-gula="28g" data-kafein="40mg">
+                <span class="badge promo">Promo</span>
+                <img src="image/thai.jpg" alt="Thai Tea Original">
+                <h3>Thai Tea Original</h3>
+                <p class="deskripsi">Teh khas Thailand dengan krim manis yang gurih dan menyegarkan.</p>
+                <p class="harga harga-lama">Rp 25.000</p>
+                <p class="harga harga-baru">Rp 20.000</p>
+                <span class="diskon">Diskon 20% - Hemat Rp 5.000</span>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">🛒 Keranjang</button>
+                    <button class="beli-langsung" onclick="beliLangsung(this)">⚡ Beli</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                    <button class="share-btn" onclick="shareProduct(this)">📤 Share</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Strawberry Smoothies" data-harga="35000" data-bahan="Stroberi Segar, Yogurt, Madu, Susu, Es Batu" data-ukuran="500ml" data-kalori="240" data-protein="6g" data-gula="32g" data-kafein="0mg">
+                <span class="badge promo">Promo</span>
+                <img src="image/stoberi.jpg" alt="Strawberry Smoothies">
+                <h3>Strawberry Smoothies</h3>
+                <p class="deskripsi">Smoothies segar dari stroberi asli yang diblender dengan sedikit madu.</p>
+                <p class="harga harga-lama">Rp 45.000</p>
+                <p class="harga harga-baru">Rp 35.000</p>
+                <span class="diskon">Diskon 22% - Hemat Rp 10.000</span>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">🛒 Keranjang</button>
+                    <button class="beli-langsung" onclick="beliLangsung(this)">⚡ Beli</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                    <button class="share-btn" onclick="shareProduct(this)">📤 Share</button>
+                </div>
+            </div>
+
+<div class="produk" data-nama="Es Dawet Ayu" data-harga="15000" data-bahan="Cendol Hijau, Santan, Gula Merah, Es Batu" data-ukuran="400ml" data-kalori="190" data-protein="2g" data-gula="24g" data-kafein="0mg">
+                <span class="badge promo">Promo</span>
+                <img src="image/esduwet.jpg" alt="Es Dawet Ayu">
+                <h3>Es Dawet Ayu</h3>
+                <p class="deskripsi">Minuman tradisional dengan cendol hijau, santan, dan gula merah otentik.</p>
+                <p class="harga harga-lama">Rp 18.000</p>
+                <p class="harga harga-baru">Rp 15.000</p>
+                <span class="diskon">Diskon 17% - Hemat Rp 3.000</span>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Lemon Madu Dingin" data-harga="22000" data-bahan="Lemon Segar, Madu Murni, Air, Es Batu" data-ukuran="500ml" data-kalori="140" data-protein="0g" data-gula="34g" data-kafein="0mg">
+                <span class="badge promo">Promo</span>
+                <img src="image/lemon.jpg" alt="Lemon Madu Dingin">
+                <h3>Lemon Madu Dingin</h3>
+                <p class="deskripsi">Perpaduan air lemon segar dan madu murni, disajikan dingin untuk stamina.</p>
+                <p class="harga harga-lama">Rp 27.000</p>
+                <p class="harga harga-baru">Rp 22.000</p>
+                <span class="diskon">Diskon 19% - Hemat Rp 5.000</span>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Es Cincau Hijau" data-harga="18000" data-bahan="Cincau Alami, Santan, Gula Merah, Es Batu" data-ukuran="400ml" data-kalori="160" data-protein="1g" data-gula="20g" data-kafein="0mg">
+                <span class="badge promo">Promo</span>
+                <img src="image/cincau.jpg" alt="Es Cincau Hijau">
+                <h3>Es Cincau Hijau</h3>
+                <p class="deskripsi">Cincau hijau alami disajikan dengan santan dan gula merah, sangat segar.</p>
+                <p class="harga harga-lama">Rp 22.000</p>
+                <p class="harga harga-baru">Rp 18.000</p>
+                <span class="diskon">Diskon 18% - Hemat Rp 4.000</span>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Es Cincau Hijau Extra" data-harga="18000" data-bahan="Cincau Alami Ekstra, Santan Premium, Gula Merah, Es Batu" data-ukuran="500ml" data-kalori="200" data-protein="2g" data-gula="26g" data-kafein="0mg">
+                <span class="badge promo">Promo</span>
+                <img src="image/cincau.jpg" alt="Es Cincau Hijau Extra">
+                <h3>Es Cincau Hijau Extra</h3>
+                <p class="deskripsi">Cincau hijau alami disajikan dengan santan dan gula merah, sangat segar.</p>
+                <p class="harga harga-lama">Rp 22.000</p>
+                <p class="harga harga-baru">Rp 18.000</p>
+                <span class="diskon">Diskon 18% - Hemat Rp 4.000</span>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Orange Smoothie" data-harga="27000" data-bahan="Jeruk, Yogurt, Madu, Es Batu" data-ukuran="450ml" data-kalori="180" data-protein="4g" data-gula="26g" data-kafein="0mg">
+                <span class="badge promo">Segar</span>
+                <img src="image/oren.jpg" alt="Orange Smoothie">
+                <h3>Orange Smoothie</h3>
+                <p class="deskripsi">Smoothie buah jeruk yang segar dengan rasa manis alami dari madu.</p>
+                <p class="harga">Rp 27.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Coconut Water" data-harga="20000" data-bahan="Air Kelapa, Es Batu" data-ukuran="450ml" data-kalori="90" data-protein="2g" data-gula="14g" data-kafein="0mg">
+                <span class="badge promo">Sehat</span>
+                <img src="image/kelapa.jpg" alt="Coconut Water">
+                <h3>Coconut Water</h3>
+                <p class="deskripsi">Air kelapa asli yang menyegarkan, cocok untuk hidrasi alami sepanjang hari.</p>
+                <p class="harga">Rp 20.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Avocado Latte" data-harga="33000" data-bahan="Alpukat, Susu, Es Batu" data-ukuran="450ml" data-kalori="260" data-protein="6g" data-gula="28g" data-kafein="0mg">
+                <span class="badge promo">Baru</span>
+                <img src="image/vocado (2).jpg" alt="Avocado Latte">
+                <h3>Avocado Latte</h3>
+                <p class="deskripsi">Rasa alpukat creamy bertemu susu dingin, minuman unik untuk pecinta smoothie.</p>
+                <p class="harga">Rp 33.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Hazelnut Frappe" data-harga="34000" data-bahan="Kopi, Susu, Saus Hazelnut, Es Batu" data-ukuran="450ml" data-kalori="250" data-protein="6g" data-gula="30g" data-kafein="65mg">
+                <span class="badge promo">Favorit</span>
+                <img src="image/helzanut.jpg" alt="Hazelnut Frappe">
+                <h3>Hazelnut Frappe</h3>
+                <p class="deskripsi">Frappe kopi dengan sirup hazelnut yang creamy, pilihan spesial untuk suasana santai.</p>
+                <p class="harga">Rp 34.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="menu-lainnya">
+                <h3>Menu Favorit Lainnya</h3>
+                <p class="katalog-desc">Tambahan pilihan menu untuk memberikan lebih banyak variasi minuman segar bagi pelanggan kami.</p>
+            </div>
+
+            <div class="produk" data-nama="Espresso Shot" data-harga="18000" data-bahan="Espresso Arabika, Air Panas" data-ukuran="60ml" data-kalori="5" data-protein="0g" data-gula="0g" data-kafein="80mg">
+                <span class="badge best-seller">Best Seller</span>
+                <img src="image/esduwet.jpg" alt="Espresso Shot">
+                <h3>Espresso Shot</h3>
+                <p class="deskripsi">Kopi hitam pekat dengan rasa intens, cocok bagi pecinta kopi sejati.</p>
+                <p class="harga">Rp 18.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Matcha Latte" data-harga="28000" data-bahan="Matcha Bubuk, Susu Segar, Es Batu" data-ukuran="450ml" data-kalori="190" data-protein="6g" data-gula="24g" data-kafein="40mg">
+                <span class="badge promo">Baru</span>
+                <img src="image/matcha.jpg" alt="Matcha Latte">
+                <h3>Matcha Latte</h3>
+                <p class="deskripsi">Perpaduan teh hijau Jepang dan susu segar, tekstur lembut dan menggoda.</p>
+                <p class="harga">Rp 28.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Cappuccino Karamel" data-harga="30000" data-bahan="Espresso, Susu Froth, Saus Karamel" data-ukuran="450ml" data-kalori="220" data-protein="7g" data-gula="28g" data-kafein="75mg">
+                <span class="badge promo">Spesial</span>
+                <img src="image/caramel.jpg" alt="Cappuccino Karamel">
+                <h3>Cappuccino Karamel</h3>
+                <p class="deskripsi">Cappuccino creamy dengan lapisan karamel manis, cocok untuk suasana santai.</p>
+                <p class="harga">Rp 30.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Mango Yakult" data-harga="25000" data-bahan="Mangga Segar, Yakult, Es Batu" data-ukuran="500ml" data-kalori="160" data-protein="3g" data-gula="25g" data-kafein="0mg">
+                <span class="badge promo">Segar</span>
+                <img src="image/mangga.jpg" alt="Mango Yakult">
+                <h3>Mango Yakult</h3>
+                <p class="deskripsi">Minuman buah tropis dengan sentuhan Yakult yang menyegarkan dan sehat.</p>
+                <p class="harga">Rp 25.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Mocktail Berry Breeze" data-harga="28000" data-bahan="Stroberi, Blueberry, Soda, Lemon" data-ukuran="450ml" data-kalori="120" data-protein="1g" data-gula="18g" data-kafein="0mg">
+                <span class="badge promo">Mocktail</span>
+                <img src="image/moktail.jpg" alt="Mocktail Berry Breeze">
+                <h3>Mocktail Berry Breeze</h3>
+                <p class="deskripsi">Minuman segar tanpa alkohol dengan kombinasi buah berry dan soda.</p>
+                <p class="harga">Rp 28.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Susu Cokelat Panas" data-harga="22000" data-bahan="Cokelat Bubuk, Susu, Krim" data-ukuran="400ml" data-kalori="230" data-protein="8g" data-gula="28g" data-kafein="0mg">
+                <span class="badge promo">Hangat</span>
+                <img src="image/susucoklat.jpg" alt="Susu Cokelat Panas">
+                <h3>Susu Cokelat Panas</h3>
+                <p class="deskripsi">Cokelat panas kental dengan susu lembut, cocok untuk suasana cozy.</p>
+                <p class="harga">Rp 22.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Tea Latte" data-harga="24000" data-bahan="Teh Ceylon, Susu, Madu" data-ukuran="450ml" data-kalori="160" data-protein="6g" data-gula="20g" data-kafein="35mg">
+                <span class="badge promo">Tea</span>
+                <img src="image/tealate.jpg" alt="Tea Latte">
+                <h3>Tea Latte</h3>
+                <p class="deskripsi">Teh latte lembut dengan aroma madu, nikmat untuk santai sore.</p>
+                <p class="harga">Rp 24.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Raspberry Iced Tea" data-harga="23000" data-bahan="Teh Hitam, Buah Raspberry Segar, Madu, Es Batu" data-ukuran="500ml" data-kalori="130" data-protein="1g" data-gula="22g" data-kafein="30mg">
+                <span class="badge promo">Segar</span>
+                <img src="image/rasbery.jpg" alt="Raspberry Iced Tea" class="img-loaded">
+                <h3>Raspberry Iced Tea</h3>
+                <p class="deskripsi">Teh segar dengan rasa buah raspberry yang asam dan manis berimbang.</p>
+                <p class="harga">Rp 23.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Vanilla Blended" data-harga="32000" data-bahan="Ekstrak Vanilla, Susu, Es Batu, Krim" data-ukuran="500ml" data-kalori="280" data-protein="7g" data-gula="35g" data-kafein="0mg">
+                <span class="badge promo">Favorit</span>
+                <img src="image/vanila.jpg" alt="Vanilla Blended" class="img-loaded">
+                <h3>Vanilla Blended</h3>
+                <p class="deskripsi">Minuman blended dengan aroma vanilla yang creamy dan nikmat.</p>
+                <p class="harga">Rp 32.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Piña Colada" data-harga="35000" data-bahan="Nanas Segar, Santan, Rum Syrup, Es Batu" data-ukuran="500ml" data-kalori="250" data-protein="2g" data-gula="38g" data-kafein="0mg">
+                <span class="badge promo">Tropis</span>
+                <img src="image/pina.jpg" alt="Piña Colada" class="img-loaded">
+                <h3>Piña Colada</h3>
+                <p class="deskripsi">Minuman tropis klasik dengan cita rasa nanas dan santan yang eksotis.</p>
+                <p class="harga">Rp 35.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Taro Latte" data-harga="29000" data-bahan="Umbi Taro, Susu, Es Batu, Gula" data-ukuran="500ml" data-kalori="210" data-protein="5g" data-gula="30g" data-kafein="0mg">
+                <span class="badge promo">Unik</span>
+                <img src="image/tro.jpg" alt="Taro Latte" class="img-loaded">
+                <h3>Taro Latte</h3>
+                <p class="deskripsi">Latte dengan rasa taro yang unik, creamy, dan sedikit manis alami.</p>
+                <p class="harga">Rp 29.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Bubble Tea Coklat" data-harga="31000" data-bahan="Teh, Susu, Tapioka Pearl, Cokelat, Es Batu" data-ukuran="500ml" data-kalori="240" data-protein="6g" data-gula="32g" data-kafein="20mg">
+                <span class="badge best-seller">Viral</span>
+                <img src="image/bluble.jpg" alt="Bubble Tea Coklat" class="img-loaded">
+                <h3>Bubble Tea Coklat</h3>
+                <p class="deskripsi">Bubble tea dengan mutiara tapioka kenyal dan rasa cokelat yang nikmat.</p>
+                <p class="harga">Rp 31.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Pomegranate Smoothie" data-harga="36000" data-bahan="Delima, Yogurt Yunani, Madu, Es Batu" data-ukuran="500ml" data-kalori="260" data-protein="8g" data-gula="36g" data-kafein="0mg">
+                <span class="badge promo">Sehat</span>
+                <img src="image/pome.jpg" alt="Pomegranate Smoothie" class="img-loaded">
+                <h3>Pomegranate Smoothie</h3>
+                <p class="deskripsi">Smoothie buah delima yang kaya antioksidan dan lezat buat kesehatan.</p>
+                <p class="harga">Rp 36.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+
+            <div class="produk" data-nama="Paket Minuman 3 Pcs" data-harga="75000" data-bahan="Pilihan Minuman Segar, Es Batu" data-ukuran="3x450ml" data-kalori="550" data-protein="12g" data-gula="60g" data-kafein="0-75mg">
+                <span class="badge best-seller">Paket</span>
+                <img src="image/paket.jpg" alt="Paket Minuman 3 Pcs">
+                <h3>Paket Minuman 3 Pcs</h3>
+                <p class="deskripsi">Paket hemat isi 3 minuman pilihan, cocok untuk dibagi bersama teman.</p>
+                <p class="harga">Rp 75.000</p>
+                <div class="tombol-container">
+                    <button class="beli" onclick="tambahKeKeranjang(this)">Tambah ke Keranjang</button>
+                    <button class="detail-btn" onclick="lihatDetail(this)">📋 Detail</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="keranjang-section">
+            <h2>Keranjang Belanja Anda <span id="cart-counter" class="cart-badge">0</span></h2>
+            <div id="keranjang-list">
+                <p style="text-align: center;">Keranjang masih kosong.</p>
+            </div>
+            
+            <div class="ringkasan-bayar">
+                <p>Total Belanja: <span id="total-harga">Rp 0</span></p>
+            </div>
+
+            <div class="metode-pengiriman">
+                <h3>Pilih Metode Pengiriman</h3>
+                <div class="pilihan-pengiriman">
+                    <label>
+                        <input type="radio" name="metodeKirim" value="grab" checked> 🛵 Grab (Pengiriman 30-45 menit)
+                    </label>
+                    <label>
+                        <input type="radio" name="metodeKirim" value="gofood"> 🏍️ GoFood (Pengiriman 25-40 menit)
+                    </label>
+                    <label>
+                        <input type="radio" name="metodeKirim" value="ambil"> 🚶 Ambil Sendiri (Ke Toko)
+                    </label>
+                </div>
+                <div id="detail-pengiriman" class="detail-pengiriman">
+                    <p>Pilih metode pengiriman untuk melanjutkan pesanan.</p>
+                </div>
+            </div>
+
+            <div class="metode-pembayaran">
+                <h3>Pilih Metode Pembayaran</h3>
+                <div class="pilihan-metode">
+                    <label>
+                        <input type="radio" name="metodeBayar" value="whatsapp" checked> Bayar via WhatsApp (Default)
+                    </label>
+                    <label>
+                        <input type="radio" name="metodeBayar" value="kartu"> Kartu Kredit/Debit
+                    </label>
+                    <label>
+                        <input type="radio" name="metodeBayar" value="transfer"> Transfer Bank
+                    </label>
+                    <label>
+                        <input type="radio" name="metodeBayar" value="ewallet"> E-Wallet (Dana, OVO, GoPay)
+                    </label>
+                </div>
+                <div id="detail-pembayaran">
+                    <p>Anda akan dihubungi via WhatsApp untuk detail pembayaran.</p>
+                </div>
+            </div>
+            
+            <button id="checkout-btn" onclick="checkout()" disabled>Lanjutkan Pembayaran</button>
+            <button id="quick-whatsapp-btn" onclick="kirimPesanCepat()" class="quick-whatsapp-btn" disabled>🚀 Kirim Pesan Cepat ke WhatsApp</button>
+            <div id="checkout-status" class="checkout-status" style="display: none;"></div>
+        </section>
+    </div>
+
+    <!-- SECTION TENTANG KAMI -->
+    <section class="tentang-kami" id="tentang-kami">
+        <div class="container">
+            <div class="tentang-grid">
+                <div class="tentang-img">
+                    <img src="image/minumm.jpg" alt="Suasana Aneka Coffe Adel">
+                    <span class="label-halal">Halal</span>
+                </div>
+                <div class="tentang-text">
+                    <h2>Tentang Aneka Coffe Adel</h2>
+                    <p>Berawal dari kecintaan mahasiswa hukum terhadap kopi berkualitas, **Aneka Coffe Adel** hadir untuk menemani waktu produktifmu. Kami percaya bahwa setiap tegukan kopi harus membawa semangat dan keadilan bagi lidah penikmatnya.</p>
+                    <p>Kami berkomitmen menyajikan minuman dengan bahan alami, proses higienis, dan transparansi penuh kepada konsumen kami.</p>
+                    <div class="keunggulan">
+                        <span>✅ 100% Halal</span>
+                        <span>✅ Gula Asli</span>
+                        <span>✅ Tanpa Pengawet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION SEJARAH TOKO -->
+    <section class="sejarah-section" id="sejarah">
+        <div class="container">
+            <h2>Perjalanan Kami</h2>
+            <p class="sejarah-intro">Dari mimpi sederhana menjadi destinasi minuman favorit ribuan pelanggan</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">📍</div>
+                    <div class="timeline-content">
+                        <h3>2018 - Awal Mula</h3>
+                        <p>Adel, seorang mahasiswa hukum semester 6, mulai membuat kopi sendiri di rumah karena kopi di sekitar kampus terlalu mahal dan tidak sesuai kualitas. Dibantu teman-temannya, dia memutuskan mencoba berjualan kopi dengan harga terjangkau.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">🏪</div>
+                    <div class="timeline-content">
+                        <h3>2019 - Buka Warung Pertama</h3>
+                        <p>Berkat antusiasme mahasiswa dan dukungan kampus, warung "Aneka Coffe Adel" resmi dibuka di sudut depan perpustakaan kampus. Meski sederhana, konsep yang segar langsung menarik perhatian.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">🎯</div>
+                    <div class="timeline-content">
+                        <h3>2020 - Ekspansi Menu</h3>
+                        <p>Pandemi membuat kami pivot strategi. Mulai mengembangkan menu smoothies, bubble tea, dan minuman sehat. Sistem delivery kami dimulai dari sini untuk memastikan pelanggan tetap terlayani dengan baik.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">⭐</div>
+                    <div class="timeline-content">
+                        <h3>2022 - Viral & Berkembang</h3>
+                        <p>Konten media sosial kami mulai viral di TikTok. Ribuan mahasiswa dari berbagai kampus menjadi pelanggan setia. Kami pindah ke lokasi yang lebih strategis untuk melayani lebih banyak orang.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">🏆</div>
+                    <div class="timeline-content">
+                        <h3>2023 - Penghargaan Pertama</h3>
+                        <p>Aneka Coffe Adel menerima penghargaan "Best Young Entrepreneur" dan "Minuman Favorit Mahasiswa" dari berbagai komunitas lokal. Kualitas dan konsistensi kami diakui industri.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">🚀</div>
+                    <div class="timeline-content">
+                        <h3>2024 - Hadir Online</h3>
+                        <p>Platform digital kami diluncurkan untuk menjangkau lebih banyak pelanggan. Website, aplikasi mobile, dan integrasi dengan berbagai marketplace membuat akses lebih mudah.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">🌟</div>
+                    <div class="timeline-content">
+                        <h3>2025 - Saat Ini</h3>
+                        <p>Dengan lebih dari 50 cabang di berbagai kota, Aneka Coffe Adel terus berinovasi. Komitmen kami tetap sama: kualitas terbaik, harga terjangkau, dan pelayanan dengan hati. Terima kasih telah menjadi bagian dari perjalanan kami! 💚</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="milestone-stats">
+                <div class="stat-box">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Cabang Tersebar</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">100K+</div>
+                    <div class="stat-label">Pelanggan Setia</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">80+</div>
+                    <div class="stat-label">Menu Pilihan</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Layanan Siap Sedia</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION ULASAN PELANGGAN -->
+<section class="ulasan-section" id="ulasan">
+    <div class="container">
+        <h2>Ulasan Pelanggan Kami</h2>
+        <p>Lihat apa kata pelanggan tentang minuman favorit mereka di Aneka Coffe Adel!</p>
+        <div class="ulasan-grid">
+            <div class="ulasan-item">
+                <div class="rating">
+                    ★★★★★
+                </div>
+                <p class="komentar">"Kopi latte-nya enak banget, creamy dan tidak pahit. Cocok buat belajar malam. Recommended!"</p>
+                <div class="pelanggan">
+                    <img src="image/avatar1.jpg" alt="Foto Ahmad">
+                    <span>Ahmad, Mahasiswa Hukum</span>
+                </div>
+            </div>
+            <div class="ulasan-item">
+                <div class="rating">
+                    ★★★★☆
+                </div>
+                <p class="komentar">"Smoothies strawberry-nya segar dan manis alami. Harganya juga terjangkau. Akan pesan lagi!"</p>
+                <div class="pelanggan">
+                    <img src="image/avatar2.jpg" alt="Foto Siti">
+                    <span>Siti, Pegawai Kantor</span>
+                </div>
+            </div>
+            <div class="ulasan-item">
+                <div class="rating">
+                    ★★★★★
+                </div>
+                <p class="komentar">"Es cincau hijau favorit saya. Dingin, manis, dan bahan-bahannya fresh. Pelayanan via WhatsApp juga cepat."</p>
+                <div class="pelanggan">
+                    <img src="image/minum.jpg" alt="Foto Budi">
+                    <span>Budi, Wiraswasta</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- SECTION KONTAK & FORMULIR -->
+    <section class="kontak-section" id="kontak">
+        <div class="container">
+            <div class="kontak-wrapper">
+                <div class="kontak-info">
+                    <h2>Hubungi Kami</h2>
+                    <p>Punya pertanyaan atau ingin pesan dalam jumlah banyak untuk acara kampus? Kami siap membantu!</p>
+                    <div class="info-item">
+                        <strong>📍 Alamat:</strong>
+                        <p>Jl. Raya Nusantara No. 123, Area Kampus Hukum, Banda Aceh.</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>⏰ Jam Operasional:</strong>
+                        <p>Senin - Sabtu: 09.00 - 21.00 WIB</p>
+                    </div>
+                    <div class="info-item">
+                        <strong>📱 WhatsApp:</strong>
+                        <p><a href="https://wa.me/6285260558595" target="_blank">0852-6055-8595</a></p>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <h3>Lokasi Kami di Peta</h3>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.0000000000005!2d95.316667!3d5.548333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304037d000000001%3A0x1234567890abcdef!2sJl.%20Raya%20Nusantara%20No.%20123%2C%20Banda%20Aceh!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" 
+                        width="100%" 
+                        height="300" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                        <strong>Koordinat GPS:</strong> 5.5483° N, 95.3167° E<br>
+                        <strong>Petunjuk Arah:</strong> Dari pusat kota Banda Aceh, ikuti Jl. Raya Nusantara ke arah utara. Lokasi berada di area kampus hukum, dekat dengan gedung fakultas.
+                    </p>
+                </div>
+            </div>
+            <div class="kontak-form">
+                    <h3>Kirim Pesan Cepat</h3>
+                    <form action="#">
+                        <input type="text" placeholder="Nama Lengkap" required>
+                        <input type="email" placeholder="Email (Opsional)">
+                        <textarea placeholder="Pesan atau Saran untuk kami..." rows="5" required></textarea>
+                        <button type="submit" class="btn-kirim">Kirim Pesan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Aneka Coffe Adel. Semua Hak Dilindungi.</p>
+        <p>Kontak: 0852-6055-8595</p>
+    </footer>
+
+    <!-- Notifikasi Popup -->
+    <div id="notifikasi" class="notifikasi">Ditambahkan ke keranjang!</div>
+    <div id="event-notification" class="event-notification"></div>
+
+    <!-- Modal Detail Produk -->
+    <div id="modal-detail" class="modal-detail">
+        <div class="modal-content">
+            <button class="close-btn" onclick="tutupDetail()">&times;</button>
+            <h2 id="detail-nama"></h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <strong>🥤 Ukuran:</strong>
+                    <p id="detail-ukuran"></p>
+                </div>
+                <div class="detail-item">
+                    <strong>🔥 Kalori:</strong>
+                    <p id="detail-kalori"></p>
+                </div>
+                <div class="detail-item">
+                    <strong>🍖 Protein:</strong>
+                    <p id="detail-protein"></p>
+                </div>
+                <div class="detail-item">
+                    <strong>🍬 Gula:</strong>
+                    <p id="detail-gula"></p>
+                </div>
+                <div class="detail-item">
+                    <strong>☕ Kafein:</strong>
+                    <p id="detail-kafein"></p>
+                </div>
+            </div>
+            <div class="detail-bahan">
+                <strong>📋 Bahan-bahan:</strong>
+                <p id="detail-bahan-text"></p>
+            </div>
+            <button class="btn-tutup" onclick="tutupDetail()">Tutup</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        // Check for updates
+                        registration.addEventListener('updatefound', function() {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(error) {
+                        // Service worker registration failed silently
+                    });
+            });
+        }
+
+        // Function to show update notification
+        function showUpdateNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'update-notification';
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    right: 20px;
+                    background: #008080;
+                    color: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    text-align: center;
+                ">
+                    <p style="margin: 0 0 10px 0;">Versi baru aplikasi tersedia!</p>
+                    <button onclick="location.reload()" style="
+                        background: white;
+                        color: #008080;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: bold;
+                    ">Perbarui Sekarang</button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+        }
+
+        // Initialize PWA install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Show install button or banner
+            showInstallBanner();
+        });
+
+        function showInstallBanner() {
+            // Check if banner already exists
+            if (document.querySelector('.install-banner')) return;
+
+            const banner = document.createElement('div');
+            banner.className = 'install-banner';
+            banner.innerHTML = `
+                <div style="
+                    position: fixed;
+                    bottom: 20px;
+                    left: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #008080, #00a0a0);
+                    color: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    z-index: 9999;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                ">
+                    <div style="flex: 1;">
+                        <strong>Install Coffe Adel App</strong><br>
+                        <small>Dapatkan pengalaman terbaik di HP Anda!</small>
+                    </div>
+                    <div>
+                        <button onclick="installPWA()" style="
+                            background: white;
+                            color: #008080;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            margin-left: 10px;
+                        ">Install</button>
+                        <button onclick="this.parentElement.parentElement.remove()" style="
+                            background: transparent;
+                            color: white;
+                            border: 1px solid white;
+                            padding: 6px 12px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            margin-left: 5px;
+                        ">Nanti</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(banner);
+
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (banner.parentNode) banner.remove();
+            }, 10000);
+        }
+
+        async function installPWA() {
+            if (!deferredPrompt) return;
+
+            // Show the install prompt
+            deferredPrompt.prompt();
+
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+
+            // Reset the deferred prompt variable
+            deferredPrompt = null;
+
+            // Hide the install banner
+            const banner = document.querySelector('.install-banner');
+            if (banner) banner.remove();
+
+            if (outcome === 'accepted') {
+                // User accepted the install prompt
+            } else {
+                // User dismissed the install prompt
+            }
+        }
+    </script>
+</body>
+</html>

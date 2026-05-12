@@ -1,0 +1,52 @@
+{
+    "name": "Aneka Coffe Adel",
+    "short_name": "Coffe Adel",
+    "description": "Aneka minuman segar dan kopi premium dari Coffe Adel. Pesan sekarang dan nikmati pengiriman cepat!",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#008080",
+    "orientation": "portrait-primary",
+    "categories": ["food", "shopping"],
+    "lang": "id-ID",
+    "icons": [
+        {
+            "src": "image/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "image/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Menu Minuman",
+            "short_name": "Menu",
+            "description": "Lihat katalog minuman lengkap",
+            "url": "/#menu",
+            "icons": [
+                {
+                    "src": "image/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Keranjang Belanja",
+            "short_name": "Keranjang",
+            "description": "Lihat dan kelola keranjang belanja",
+            "url": "/#keranjang",
+            "icons": [
+                {
+                    "src": "image/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
+}
